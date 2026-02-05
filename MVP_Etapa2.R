@@ -1,5 +1,5 @@
 # ================================================
-
+#100% Sincronizado Github
 #FEN UCHILE
 #ETAPA 2 PROYECTO EN CURSO 
 # Informe de estado de resultados a partir de dos archivos Excel que contienen la información mensual de presupuestos,
