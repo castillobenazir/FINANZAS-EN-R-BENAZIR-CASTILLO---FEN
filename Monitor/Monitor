@@ -1,0 +1,56 @@
+# ============================================================
+# monitor/monitor.R
+# Script de monitoreo de calidad de datos y cálculos
+# ============================================================
+
+library(readxl)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(janitor)
+
+cat("\n[MONITOR] Iniciando chequeos...\n")
+
+# Archivo fuente
+FILE <- "../BBDD Estado Resultado Operacional.xlsx"
+stopifnot(file.exists(FILE))
+
+raw <- read_excel(FILE) |> clean_names()
+
+issues <- c()
+
+# 1) Check filas
+if (nrow(raw) < 50) issues <- c(issues, "Advertencia: pocas filas en el Excel.")
+
+# 2) Check columnas clave
+expected_cols <- c("periodo","agrupador","pc","descripcion","n2","n3")
+missing <- expected_cols[!expected_cols %in% names(raw)]
+if (length(missing) > 0) issues <- c(issues, paste("Faltan columnas:", paste(missing, collapse=", ")))
+
+# 3) Check meses
+meses <- c("sep","oct","nov","dic","ene","feb","mar","abr","may","jun","jul","ago")
+found_meses <- meses[meses %in% names(raw)]
+if (length(found_meses) < 6) {
+  issues <- c(issues, "Advertencia: menos de 6 columnas de meses detectadas.")
+}
+
+# 4) Parseo numérico básico (si hay muchos NA es mala señal)
+nums <- suppressWarnings(as.numeric(unlist(raw[,found_meses])))
+na_rate <- mean(is.na(nums))
+if (na_rate > 0.05)
+  issues <- c(issues, paste0("Más de 5% de NA después de parseo numérico: ", round(na_rate*100,1), "%"))
+
+# 5) Duplicados
+dups <- raw |> duplicated() |> sum()
+if (dups > 0)
+  issues <- c(issues, paste("Hay filas duplicadas:", dups))
+
+# 6) Log final
+if (length(issues) == 0) {
+  cat("[MONITOR] OK - No se detectaron problemas importantes.\n")
+} else {
+  cat("[MONITOR] Problemas detectados:\n")
+  for (i in issues) cat(" -", i, "\n")
+}
+
+cat("[MONITOR] Finalizado.\n")
