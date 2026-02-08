@@ -36,17 +36,16 @@
 - Si falta `09_GOP` en una combinación, se asume 0 en la agregación.
 
 ## 3. Diagrama del Proceso (Mermaid)
-
 ```mermaid
 flowchart LR
-  A[Excel fuente\nBBDD Estado Resultado Operacional.xlsx] --> B[Ingesta R\nclean_names + normaliza meses]
-  B --> C[parse_num()\ncoma/punto y NBSP]
-  C --> D[Períodos\nregex flexible]
-  D --> E[pivot_longer\nsep..ago → mes,monto]
-  E --> F[Mapeo agrupador\n01_Revenue..09_GOP]
-  F --> G[Agregación mensual\nVenta/GOP por PC/Desc/N2/N3/Periodo]
-  G --> H[App Shiny\nFiltros: N+3, N+2, Desc/PC (OR), Mes]
-  H --> I[Gráfico Barras\nReal vs Budget: Venta y GOP]
-  H --> J[Gráfico Línea\nTendencia GOP% Real vs Budget]
-  H --> K[Auditoría\nAgregados + descarga CSV]
-  ```
+  A["Excel fuente<br/>BBDD Estado Resultado Operacional.xlsx"] --> B["Ingesta R<br/>clean_names + normaliza meses"]
+  B --> C["parse_num()<br/>coma/punto y NBSP"]
+  C --> D["Períodos<br/>regex flexible"]
+  D --> E["pivot_longer<br/>sep..ago → mes,monto"]
+  E --> F["Mapeo agrupador<br/>01_Revenue..09_GOP"]
+  F --> G["Agregación mensual<br/>Venta/GOP por PC/Desc/N2/N3/Periodo"]
+  G --> H["App Shiny<br/>Filtros: N+3, N+2, Desc/PC (OR), Mes"]
+  H --> I["Gráfico Barras<br/>Real vs Budget: Venta y GOP"]
+  H --> J["Gráfico Línea<br/>Tendencia GOP% Real vs Budget"]
+  H --> K["Auditoría<br/>Agregados + descarga CSV"]
+```
